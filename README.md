@@ -52,7 +52,9 @@ tmux
 ./autorex.sh
 ```
 ## Sudo ID
-* Input your ID at line 123 in bot.lua and line 2 in tools.lua
+* Input your ID at line 123 in Rexcli/bot.lua and line 2 in Rexcli/plugins/tools.lua
+
+* Input your ID and Cli Id at line 5 & line 165 in Rexapi/bot.lua
 
 ## Commands
 
