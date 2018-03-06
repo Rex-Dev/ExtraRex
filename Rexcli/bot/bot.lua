@@ -127,14 +127,15 @@ function create_config( )
     info_text = [[
 》Extra Rex New Version (TDBot v1.0)
 
-》https://github.com/Rex-Company/Rex.git
+》https://github.com/Rex-Dev/ExtraRex.git
 
 》Admins :
+》@Solid ➣ Founder & Developer《
 》@Rex_Developer ➣ Founder & Editor《
 》@sudo_hack & @KarBad ➣ Editors《
 
 》Special thanks to :
-》@KlngSUDO 
+》@BeyondTeam 
 
 》Our channel :
 》@RexCompany《
