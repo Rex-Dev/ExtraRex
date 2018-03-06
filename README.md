@@ -61,6 +61,9 @@ tmux
 ## Editors
 
 [Mr Rex](https://telegram.me/Rex_Dev)
+[Sudo Hack](https://telegram.me/Sudohack)
+[Ashkan](https://telegram.me/karbad)
+[Amir](https://telegram.me/Rex_Support)
 
 ## Special thanks to
 
