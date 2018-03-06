@@ -172,12 +172,13 @@ function create_config( )
 》[Rex Helper](https://github.com/BeyondTeam/Rexapi)
 
 *》Admins :*
+*》Founder & Developer :* [Solid](Telegram.Me/SOlid)
 *》Founder & Editor :* [MR Rex](Telegram.Me/Rex_Developer)
 *》Editors :* [Sudo Hack](Telegram.Me/Sudo_Hack) & [Ashkan](Telegram.Me/KarBad) & [Amir](telegram.me/Rex_Support)
 *》Thinker & Designer :* [Mr Winner](Telegram.Me/MrWinner)
 
 *》Special thanks to :*
-》[King Sudo](Telegram.Me/KlNGSUDO)
+》[Beyond Team](Telegram.Me/BetondTeam)
 
 *》Our channel :*
 》[Rex Company](Telegram.Me/RexCompany)
