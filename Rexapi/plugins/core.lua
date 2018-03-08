@@ -23,8 +23,10 @@ local function already_sudo(user_id)
 	-- If not found
 	return false
 end
-
---By @SoLiD
+local url , res = https.request('https://api.grandteam.ir/time/')
+  if res ~= 200 then return end
+local jd = json:decode(url)
+--By @Rex_Developer
 local function sudolist(msg)
 	local sudo_users = _config.sudo_users
 	local text = "Sudo Users :\n"
@@ -38,7 +40,7 @@ local function options(msg, GP_id)
 local hash = "gp_lang:"..GP_id
 local lang = redis:get(hash) 
      if not lang then
-	 text = '❥ Welcome To *Group Option*'
+	 text = '❥ Welcome To *Group Panel*\n\n`● '..jd.ENdate..'`\n'
 	keyboard = {} 
 	keyboard.inline_keyboard = {
          {
@@ -65,11 +67,14 @@ local lang = redis:get(hash)
             {text = '⇝ About Us 🔎', callback_data = '/rex:'..GP_id}
 		},
 		{
-			{text= 'Back ⇜' ,callback_data = '/lang:'..GP_id}
-		}				
+			{text= '⇝ Change Language' ,callback_data = '/persian:'..GP_id}
+		},
+        {
+			{text= 'Exit ⇜' ,callback_data = '/exit:'..GP_id}
+		}
 	}
   elseif lang then
-	 text = '↫ به تنظیمات کلی خوشآمدید '
+	 text = '↫ به پنل تنظیمات گروه خوشآمدید \n\n`● تاریخ ⇜ '..jd.FAdate..'`\n'
 	keyboard = {} 
 	keyboard.inline_keyboard = {
         {
@@ -88,7 +93,7 @@ local lang = redis:get(hash)
         },
 		{
 			{text = '⇜ راهنما ❕', callback_data = '/help:'..GP_id},
-            {text = '⇜ تلیویزیون  🖥', callback_data = '/tv:'..GP_id}
+            {text = '⇜ تلیویزیون  🖥', callback_data = '/tvfa:'..GP_id}
             
 		},
         {
@@ -96,8 +101,11 @@ local lang = redis:get(hash)
             {text = '⇜ درباره ما 🔎', callback_data = '/rex:'..GP_id}
 		},
 		{
-			{text= '⇜ برگشت' ,callback_data = '/lang:'..GP_id}
-		}			
+			{text= '⇜ تغییر زبان' ,callback_data = '/english:'..GP_id}
+		},
+        {
+			{text= '⇜ خروج' ,callback_data = '/exit:'..GP_id}
+		}	
 	}
   end
     edit_inline(msg.message_id, text, keyboard)
@@ -188,6 +196,11 @@ local lang = redis:get(hash)
 	else
 		lock_link = 'no'
 	end
+    if settings.lock_link_kick then
+		lock_link_kick = settings.lock_link_kick
+	else
+		lock_link_kick = 'no'
+	end
 	if settings.lock_join then
 		lock_join = settings.lock_join
 	else
@@ -257,7 +270,7 @@ local lang = redis:get(hash)
 			{text = lock_edit, callback_data="/lockedit:"..GP_id}
 		},
 		{
-			{text = "⇝ Lock Link", callback_data='RexCompany'}, 
+			{text = "⇝ Lock Link", callback_data='/locklinks:'..GP_id}, 
 			{text = lock_link, callback_data="/locklink:"..GP_id}
 		},
 		{
@@ -688,6 +701,19 @@ if msg.query and msg.query:match("-%d+") and is_sudo(msg) then
 	}
 	send_inline(msg.id,'settings','Group Option','Tap Here','Please select an option.!',keyboard)
 end
+if msg.query and msg.query:match("-%d++") and is_sudo(msg) then
+	local chatid = "-"..msg.query:match("%d++")
+	keyboard = {}
+	keyboard.inline_keyboard = {
+		{
+			{text = '❥ Go To Group Help ', callback_data = '/lang:'..chatid}
+		},
+		{
+			{text= '⇝ Exit' ,callback_data = '/exit:'..chatid}
+		}					
+	}
+	send_inline(msg.id,'settings','Group Option','Tap Here','Please select an option.!',keyboard)
+end
 if msg.cb then
 local hash = "gp_lang:"..matches[2]
 local lang = redis:get(hash) 
@@ -785,6 +811,62 @@ if matches[1] == '/moresettings' then
 end
 
           -- ####################### Settings ####################### --
+if matches[1] == '/locklinks' then
+if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+    else
+keyboard = {}
+    keyboard.inline_keyboard = {
+        {
+            {text = "lock|unlock",callback_data = '/locklink:'..matches[2]},
+            {text = "kick",callback_data = '/kicklink:'..matches[2]}
+        },
+        {
+            {text = "Ban",callback_data = '/banlink:'..matches[2]},
+            {text = "Warn",callback_data = '/warnlink:'..matches[2]}
+        },  
+        {
+            {text = "Back",callback_data = '/option:'..matches[2]}
+        }
+ }
+end
+edit_inline(msg.message_id, '⏰ time ➲ '..os.date("%H : %M"), keyboard)
+end
+
+if matches[1] == '/kicklink' then
+	if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+	else
+		local locklink = data[tostring(matches[2])]["settings"]["lock_link_kick"]
+		if locklink == "no" then
+   if not lang then
+			text = '🔐 Link ➲ kicked'
+   elseif lang then
+			text = 'قفل لینک فعال شد'
+    end
+			data[tostring(matches[2])]["settings"]["lock_link_kick"] = "yes"
+			save_data(_config.moderation.data, data)
+		elseif locklink == "yes" then
+   if not lang then
+			text = '🔐 Link ➲ Unkicked'
+   elseif lang then
+			text = 'قفل لینک غیر فعال شد 🔐'
+    end
+			data[tostring(matches[2])]["settings"]["lock_link_kick"] = "no"
+			save_data(_config.moderation.data, data)
+		end
+		get_alert(msg.cb_id, text)
+		setting(msg, data, matches[2])
+	end
+end
 if matches[1] == '/locklink' then
 	if not is_mod1(matches[2], msg.from.id) then
      if not lang then
@@ -3018,6 +3100,54 @@ edit_inline(msg.message_id, '*✧ راهنمای فان رکس:*\n\n↜ ساعت
 end
 end
 if matches[1] == '/tv' then
+if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+    else
+text = 'Tv Live'
+keyboard = {}
+    keyboard.inline_keyboard = {
+        {
+            {text = "⇝ Tv Iran 📺",callback_data = '/ir:'..matches[2]}
+        },
+        {
+            {text = "⇝ Satellite Channel 🌐",callback_data = '/mahvare:'..matches[2]}
+        },
+        {
+            {text = "Back ⇜",callback_data = '/option:'..matches[2]}
+        }
+ }
+end
+edit_inline(msg.message_id, text, keyboard)
+end
+if matches[1] == '/tvfa' then
+if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+    else
+text = 'تلیویزیون فارسی'
+keyboard = {}
+    keyboard.inline_keyboard = {
+        {
+            {text = "⇜ شبکه های ایران 📺",callback_data = '/irfa:'..matches[2]}
+        },
+        {
+            {text = "⇜ شبکه های ماهواره 🌐",callback_data = '/mahvarefa:'..matches[2]}
+        },
+        {
+            {text = "⇜ برگشت",callback_data = '/option:'..matches[2]}
+        }
+ }
+end
+edit_inline(msg.message_id, text, keyboard)
+end
+if matches[1] == '/mahvare' then
     if not is_mod1(matches[2], msg.from.id) then
      if not lang then
 		get_alert(msg.cb_id, "You Are Not Moderator")
@@ -3025,71 +3155,163 @@ if matches[1] == '/tv' then
 		get_alert(msg.cb_id, "شما مدیر نیستید")
    end
     else
-    if not lang then
 keyboard = {}
     keyboard.inline_keyboard = {
         {
-            {text = "📟 Cartoon NetWork", url = 'http://www.zengatv.com/live/20f69b5b-baca-11e1-bc3d-1231381a91e4.html'}
+            {text = "⇝ Cartoon NetWork", url = 'http://www.zengatv.com/live/20f69b5b-baca-11e1-bc3d-1231381a91e4.html'}
         },
         {
-            {text = "💎 Gem TV", url = 'http://www.giniko.com/watch.php?id=353'}
+            {text = "⇝ Gem TV", url = 'http://www.giniko.com/watch.php?id=353'}
         },
         {
-            {text = "📡 Man o To", url = 'https://www.manototv.com/live'}
+            {text = "⇝ Man o To", url = 'https://www.manototv.com/live'}
         },
         {
-            {text = "🖥 PMC", url = 'https://pmc.tv'}
+            {text = "⇝ PMC", url = 'https://pmc.tv'}
         },
         {
-            {text = "📱 Nasim", url = 'http://katrin.ir/view/live/show#=https://goo.gl/4rVU1K'}
+            {text = "⇝ Tv Persia", url = 'http://www.tvpersia.com/'}
         },
         {
-            {text = "🔞 Porno", url = 'https://www.google.nl/url?sa=t&source=web&rct=j&url=https://www.pornhub.com/video/search%3Fsearch%3Donline&ved=2ahUKEwiJsIWE36PZAhVPalAKHUp_BSsQFjAAegQIExAB&usg=AOvVaw0XGTM_Z8oDqaVjplyNH_wj'}
+            {text = "⇝ Porno 🔞", url = 'https://www.google.nl/url?sa=t&source=web&rct=j&url=https://www.pornhub.com/video/search%3Fsearch%3Donline&ved=2ahUKEwiJsIWE36PZAhVPalAKHUp_BSsQFjAAegQIExAB&usg=AOvVaw0XGTM_Z8oDqaVjplyNH_wj'}
         },
         {
-            {text = "🔺 IFilm", url = 'http://katrin.ir/view/live/show#=https://goo.gl/empyyh'}
-        },
-        {
-            {text = "🎥 Namaysesh", url = 'http://katrin.ir/view/live/show#=https://goo.gl/HAEjP7'}
-        },
-        {
-            {text = "Back",callback_data = '/option:'..matches[2]}
+            {text = "Back ⇜",callback_data = '/tv:'..matches[2]}
         }
  }
-    elseif lang then
+end
+edit_inline(msg.message_id, '💠 Please Use of VPN', keyboard)
+end
+if matches[1] == '/mahvarefa' then
+    if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+    else
 keyboard = {}
     keyboard.inline_keyboard = {
         {
-            {text = "📟 انیمیشن", url = 'http://www.zengatv.com/live/20f69b5b-baca-11e1-bc3d-1231381a91e4.html'}
+            {text = "⇜ انیمیشن", url = 'http://www.zengatv.com/live/20f69b5b-baca-11e1-bc3d-1231381a91e4.html'}
         },
         {
-            {text = "💎 جم تی وی", url = 'http://www.giniko.com/watch.php?id=353'}
+            {text = "⇜ جم تی وی", url = 'http://www.giniko.com/watch.php?id=353'}
         },
         {
-            {text = "📡 من و تو", url = 'https://www.manototv.com/live'}
+            {text = "⇜ من و تو", url = 'https://www.manototv.com/live'}
         },
         {
-            {text = "🖥 پی ام سی", url = 'https://pmc.tv'}
+            {text = "⇜ پی ام سی", url = 'https://pmc.tv'}
         },
         {
-            {text = "📱 نسیم", url = 'http://katrin.ir/view/live/show#=https://goo.gl/4rVU1K'}
+            {text = "⇜ تی وی پرشیا", url = 'http://www.tvpersia.com/'}
         },
         {
-            {text = "🔞 پورن", url = 'https://www.google.nl/url?sa=t&source=web&rct=j&url=https://www.pornhub.com/video/search%3Fsearch%3Donline&ved=2ahUKEwiJsIWE36PZAhVPalAKHUp_BSsQFjAAegQIExAB&usg=AOvVaw0XGTM_Z8oDqaVjplyNH_wj'}
+            {text = "⇜ پورن 🔞", url = 'https://www.google.nl/url?sa=t&source=web&rct=j&url=https://www.pornhub.com/video/search%3Fsearch%3Donline&ved=2ahUKEwiJsIWE36PZAhVPalAKHUp_BSsQFjAAegQIExAB&usg=AOvVaw0XGTM_Z8oDqaVjplyNH_wj'}
         },
         {
-            {text = "🔺 آی فیلم", url = 'http://katrin.ir/view/live/show#=https://goo.gl/empyyh'}
-        },
-        {
-            {text = "🎥 نمایش", url = 'http://katrin.ir/view/live/show#=https://goo.gl/HAEjP7'}
-        },
-        {
-            {text = "Back",callback_data = '/option:'..matches[2]}
+            {text = "⇜ برگشت",callback_data = '/tvfa:'..matches[2]}
         }
  }               
 end
 edit_inline(msg.message_id, '💠 Please Use of VPN', keyboard)
 end
+if matches[1] == '/ir' then
+    if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+    else
+keyboard = {}
+    keyboard.inline_keyboard = {
+        {
+            {text = "⇝ Tv ➊", url = 'https://www.aparat.com/live/tv1'},
+            {text = "⇝ Tv ➋", url = 'https://www.aparat.com/live/tv2'}
+        },
+        {
+            {text = "⇝ Tv ➌", url = 'https://www.aparat.com/live/tv3'},
+            {text = "⇝ Tv ➍", url = 'https://www.aparat.com/live/tv4'}
+        },
+        {
+            {text = "⇝ Tv ➎", url = 'https://www.aparat.com/live/tv5'},
+            {text = "⇝ Irinn", url = 'https://www.aparat.com/live/irinn'}
+        },
+        {
+            {text = "⇝ Ifilm", url = 'https://www.aparat.com/live/ifilm'},
+            {text = "⇝ Namayesh", url = 'https://www.aparat.com/live/namayesh'}
+        },
+        {
+            {text = "⇝ Varsesh", url = 'https://www.aparat.com/live/varzesh'},
+            {text = "⇝ Nasim", url = 'https://www.aparat.com/live/nasim'}
+        },
+        {
+            {text = "⇝ mostanad", url = 'https://www.aparat.com/live/mostanad'},
+            {text = "⇝ ofogh", url = 'https://www.aparat.com/live/ofogh'}
+        },
+        {
+            {text = "⇝ pouya", url = 'https://www.aparat.com/live/pouya'}
+        },
+        {
+            {text = "⇝ Hd", url = 'https://www.aparat.com/live/hd'},
+            {text = "⇝ Press Tv", url = 'https://www.aparat.com/live/press'}
+        },
+        {
+            {text = "Back ⇜",callback_data = '/tv:'..matches[2]}
+        }
+ }
+end
+edit_inline(msg.message_id, 'Tv Iran', keyboard)
+end
+if matches[1] == '/irfa' then
+    if not is_mod1(matches[2], msg.from.id) then
+     if not lang then
+		get_alert(msg.cb_id, "You Are Not Moderator")
+   elseif lang then
+		get_alert(msg.cb_id, "شما مدیر نیستید")
+   end
+    else
+keyboard = {}
+    keyboard.inline_keyboard = {
+        {
+            {text = "⇜ شبکه ➊", url = 'https://www.aparat.com/live/tv1'},
+            {text = "⇜ شبکه ➋", url = 'https://www.aparat.com/live/tv2'}
+        },
+        {
+            {text = "⇜ شبکه ➌", url = 'https://www.aparat.com/live/tv3'},
+            {text = "⇜ شبکه ➍", url = 'https://www.aparat.com/live/tv4'}
+        },
+        {
+            {text = "⇜ شبکه ➎", url = 'https://www.aparat.com/live/tv5'},
+            {text = "⇜ خبر", url = 'https://www.aparat.com/live/irinn'}
+        },
+        {
+            {text = "⇜ آی فیلم", url = 'https://www.aparat.com/live/ifilm'},
+            {text = "⇜ نمایش", url = 'https://www.aparat.com/live/namayesh'}
+        },
+        {
+            {text = "⇜ ورزش", url = 'https://www.aparat.com/live/varzesh'},
+            {text = "⇜ نسیم", url = 'https://www.aparat.com/live/nasim'}
+        },
+        {
+            {text = "⇜ مستند", url = 'https://www.aparat.com/live/mostanad'},
+            {text = "⇜ افق", url = 'https://www.aparat.com/live/ofogh'}
+        },
+        {
+            {text = "⇜ پویا", url = 'https://www.aparat.com/live/pouya'}
+        },
+        {
+            {text = "⇜ تماشا", url = 'https://www.aparat.com/live/hd'},
+            {text = "⇜ پرس تی وی", url = 'https://www.aparat.com/live/press'}
+        },
+        {
+            {text = "⇜ برگشت",callback_data = '/tvfa:'..matches[2]}
+        }
+ }   
+end
+edit_inline(msg.message_id, 'Tv Iran', keyboard)
 end
 if matches[1] == '/time' then
 if not is_mod1(matches[2], msg.from.id) then
@@ -3177,7 +3399,9 @@ end
 return {
 	patterns ={
 		"^-(%d+)$",
+        "^-(%d++)$",
 		"^###cb:(%d+)$",
+        "^###cb:(%d++)$",
 		"^[/](sudolist)$",
 		"^[/](setsudo)$",
 		"^[/](remsudo)$",
@@ -3185,10 +3409,16 @@ return {
 		"^[/](remsudo) (%d+)$",
 		"^###cb:(/option):(.*)$",
 		"^###cb:(/lang):(.*)$",
+        "^###cb:(/ir):(.*)$",
+        "^###cb:(/irfa):(.*)$",
+        "^###cb:(/mahvare):(.*)$",
+        "^###cb:(/mahvarefa):(.*)$",
 		"^###cb:(/persian):(.*)$",
 		"^###cb:(/english):(.*)$",
 		"^###cb:(/settings):(.*)$",
 		"^###cb:(/mutelist):(.*)$",
+        "^###cb:(/locklinks):(.*)$",
+        "^###cb:(/kicklink):(.*)$",
 		"^###cb:(/locklink):(.*)$",
 		"^###cb:(/lockedit):(.*)$",
 		"^###cb:(/locktags):(.*)$",
@@ -3237,6 +3467,7 @@ return {
         "^###cb:(/help):(.*)$",
         "^###cb:(/sudohelp):(.*)$",
         "^###cb:(/tv):(.*)$",
+        "^###cb:(/tvfa):(.*)$",
         "^###cb:(/time):(.*)$",
         "^###cb:(/like):(.*)$",
         "^###cb:(/dislike):(.*)$",
