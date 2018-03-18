@@ -238,17 +238,7 @@ tdbot.sendDocument(msg.to.id, pfile, msg_caption, nil, msg.id, 0, 1, nil, dl_cb,
 		return wtext
 	end
 --------------------------------
-    if matches[1] == "butss" or matches[1] == "کیون" and is_mod(msg) then
-      url = getRandomButts()
-      local  file = download_to_file(url,'butts.webp')
-      tdbot.sendDocument(msg.to.id, file, msg_caption, nil, msg.id, 0, 1, nil, dl_cb, nil)
-    end
---------------------------------
-    if matches[1] == "boobs" or matches[1] == "ممه" and is_mod(msg) then
-      url = getRandomBoobs()
-      local  file = download_to_file(url,'boobs.webp')
-      tdbot.sendDocument(msg.to.id, file, msg_caption, nil, msg.id, 0, 1, nil, dl_cb, nil)
-    end
+
 --------------------------------
 	if (matches[1]:lower() == 'time' and not Clang) or (matches[1]:lower() == 'ساعت' and Clang) then
 		local url , res = http.request('http://api.beyond-dev.ir/time/')
@@ -343,137 +333,7 @@ end
 		local  file = download_to_file(url,'text.jpg')
 			tdbot.sendPhoto(msg.to.id, msg.id, file, 0, {}, 0, 0, msg_caption, 0, 0, 1, nil, dl_cb, nil)
 	end
-if matches[1]:lower() == 'keepcalm' then
-          local text = URL.escape(matches[2])
-          local bgcolor = "mathrm"
-          if matches[3] == "blue" then
-            bgcolor = "0000ff"
-          elseif matches[3] == "pink" then
-            bgcolor = "e11bca"
-          elseif matches[3] == "violet" then
-            bgcolor = "7366BD"
-          elseif matches[3] == "red" then
-            bgcolor = "ff0000"
-          elseif matches[3] == "brown" then
-            bgcolor = "B4674D"
-          elseif matches[3] == "orange" then
-            bgcolor = "FF7F49"
-          elseif matches[3] == "gray" then
-            bgcolor = "B0B7C6"
-          elseif matches[3] == "cream" then
-            bgcolor = "FFFF99"
-          elseif matches[3] == "green" then
-            bgcolor = "00ff00"
-          elseif matches[3] == "black" then
-            bgcolor = "000000"
-          elseif matches[3] == "white" then
-            bgcolor = "ffffff"
-          elseif matches[3] == "Fuchsia" then
-            bgcolor = "ff00ff"
-          elseif matches[3] == "Aqua" then
-            bgcolor = "00ffff"
-          elseif matches[3] == "yellow" then
-            bgcolor = "ffff00"
-          end
-          local textcolor = "blue"
-          if matches[4] == "blue" then
-            textcolor = "0000ff"
-          elseif matches[4] == "pink" then
-            textcolor = "e11bca"
-          elseif matches[4] == "violet" then
-            textcolor = "7366BD"
-          elseif matches[4] == "red" then
-            textcolor = "ff0000"
-          elseif matches[4] == "brown" then
-            textcolor = "B4674D"
-          elseif matches[4] == "orange" then
-            textcolor = "FF7F49"
-          elseif matches[4] == "gray" then
-            textcolor = "B0B7C6"
-          elseif matches[4] == "cream" then
-            textcolor = "FFFF99"
-          elseif matches[4] == "green" then
-            textcolor = "00ff00"
-          elseif matches[4] == "black" then
-            textcolor = "000000"
-          elseif matches[4] == "white" then
-            textcolor = "ffffff"
-          elseif matches[4] == "Fuchsia" then
-            textcolor = "ff00ff"
-          elseif matches[4] == "Aqua" then
-            textcolor = "00ffff"
-          elseif matches[4] == "yellow" then
-            textcolor = "ffff00"
-          end
-          local text = "700"
-          if matches[5] == "blue" then
-            text = "0000ff"
-          elseif matches[5] == "pink" then
-            text = "e11bca"
-          elseif matches[5] == "violet" then
-            text = "7366BD"
-          elseif matches[5] == "red" then
-            text = "ff0000"
-          elseif matches[5] == "brown" then
-            text = "B4674D"
-          elseif matches[5] == "orange" then
-            text = "FF7F49"
-          elseif matches[5] == "gray" then
-            text = "B0B7C6"
-          elseif matches[5] == "cream" then
-            text = "FFFF99"
-          elseif matches[5] == "green" then
-            text = "00ff00"
-          elseif matches[5] == "black" then
-            text = "000000"
-          elseif matches[5] == "white" then
-            text = "ffffff"
-          elseif matches[5] == "Fuchsia" then
-            text = "ff00ff"
-          elseif matches[5] == "Aqua" then
-            text = "00ffff"
-          elseif matches[5] == "yellow" then
-            text = "ffff00"
-          end
-          local size = "size"
-          if matches[6] == "100" then
-            size = "100"
-          elseif matches[6] == "200" then
-            size = "200"
-          elseif matches[6] == "300" then
-            size = "300"
-          elseif matches[6] == "400" then
-            size = "400"
-          elseif matches[6] == "500" then
-            size = "500"
-          elseif matches[6] == "600" then
-            size = "600"
-          elseif matches[6] == "700" then
-            size = "700"
-          elseif matches[6] == "800" then
-            size = "800"
-          elseif matches[6] == "900" then
-            size = "900"
-          elseif matches[6] == "1000" then
-            size = "1000"
-          end
-          local url = "http://www.keepcalmstudio.com/-/p.php?t=%EE%BB%AA%0D%0AKEEP%0D%0ACALM%0D%0AAND%0D%0A" .. URL.escape(matches[2]) .. "&bc=" .. bgcolor .. "&tc=" .. textcolor .. "&cc=" .. text .. "&w=" .. size .. "&uc=true&ts=true&ff=PNG&ps=sq"
-          local  file = download_to_file(url,'keepcalm.webp')
-          tdbot.sendDocument(msg.to.id, file, msg_caption, nil, msg.id, 0, 1, nil, dl_cb, nil)
-        end
-    if matches[1]:lower() == 'love' then
-          local text1 = matches[2]
-          local text2 = matches[3]
-          local url = "http://www.iloveheartstudio.com/-/p.php?t=" .. text1 .. "%20%EE%BB%AE%20" .. text2 .. "&bc=FFFFFF&tc=000000&hc=ff0000&f=c&uc=true&ts=true&ff=PNG&w=500&ps=sq"
-          local file = download_to_file(url, "love.webp")
-          tdbot.sendDocument(msg.to.id, file, msg_caption, nil, msg.id, 0, 1, nil, dl_cb, nil)
-        end
-    if matches[1]:lower() == 'emoji' then
-          local text1 = matches[2]
-          local url = "http://2wap.org/usf/text_sm_gen/sm_gen.php?text=" .. text1 ..""
-          local file = download_to_file(url, "emoji.webp")
-          tdbot.sendDocument(msg.to.id, file, msg_caption, nil, msg.id, 0, 1, nil, dl_cb, nil)
-        end
+
 if (matches[1]:lower () == 'creator' and not Clang) or (matches[1] == 'سازنده' and Clang) then
 return '₪ My Creator ➲ @RexDeveloper'
 end
@@ -705,18 +565,11 @@ return {
 		"^([Ss]hort) (.*)$",
 		"^([Pp]hoto) (.+)$",
 		"^(sticker) (.+)$",
-        "^(love) (.+) (.+)$",
-        "^(emoji) (.+)$",
-        "^(boobs)$",
-        "^(butss)$",
-        "^(keepcalm) (.+) (.+) (.+) (.+) (.+)$",
         "^(راهنمای سرگرمی)$",
     	"^(اب و هوا) (.*)$",
 		"^(ماشین حساب) (.*)$",
 		"^(ساعت)$",
         "^(سازنده)$",
-        "^(ممه)$",
-        "^(کیون)$",
 		"^(به عکس)$",
 		"^(به استیکر)$",
 		"^(صدا) +(.*)$",
